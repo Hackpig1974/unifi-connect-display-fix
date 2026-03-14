@@ -182,3 +182,5 @@ A full Word document with extended background, root cause theory, and troublesho
 ---
 
 *Community guide — not affiliated with Ubiquiti. Use at your own risk.*
+
+Made with ❤️ for the Claude.ai community
