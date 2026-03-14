@@ -16,7 +16,7 @@ const store = new Store({
 });
 
 // ── Version / update check ────────────────────────────────────────────────────
-const VERSION = '1.0.0';
+const VERSION = '1.0.1';
 const RELEASES_URL = 'https://github.com/Hackpig1974/unifi-connect-display-fix/releases/latest';
 
 function checkForUpdate(callback) {
