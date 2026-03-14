@@ -32,6 +32,10 @@
   "keywords": [],
   "author": "Damon Downing",
   "license": "GPL-3.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Hackpig1974/unifi-connect-display-fix.git"
+  },
   "devDependencies": {
     "electron": "^31.7.7",
     "electron-builder": "^24.13.3"
