@@ -7,6 +7,12 @@
 
 > 🚀 **Uni Display Updater app now available!** A portable Windows and macOS app that makes this entire process point-and-click. Download it from the [Releases](https://github.com/Hackpig1974/unifi-connect-display-fix/releases/latest) page.
 
+[![Ko-fi](https://img.shields.io/badge/Support%20this%20project-Ko--fi-f9a825?style=flat&logo=ko-fi)](https://ko-fi.com/hackpig1974)
+
+---
+
+![Uni Display Updater](app/assets/screenshot.png)
+
 ---
 
 ## The Problem

@@ -440,6 +440,15 @@ body {
   color: var(--text-muted);
 }
 
+.kofi-link {
+  color: #f9a825;
+  text-decoration: none;
+  font-size: 11px;
+  margin-top: 4px;
+  transition: color 0.15s;
+}
+.kofi-link:hover { color: #ffd54f; text-decoration: underline; }
+
 /* ── Next steps panel ─────────────────────────────────────────────────────── */
 .next-steps {
   margin: 0 14px 8px 14px;

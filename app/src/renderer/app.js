@@ -16,6 +16,10 @@ async function init() {
 
   document.getElementById('credits-version').textContent = `v${versionInfo.version}`;
 
+  // Ko-fi link
+  const kofi = document.getElementById('credits-kofi');
+  kofi.onclick = (e) => { e.preventDefault(); window.api.openExternal('https://ko-fi.com/hackpig1974'); };
+
   // Show WebUI button if IP configured and file already downloaded
   // (button removed — handled by upload button directly)
 
