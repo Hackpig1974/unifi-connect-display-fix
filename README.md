@@ -5,7 +5,7 @@
 
 ---
 
-> 🚀 **Stay tuned** — a portable Windows app is coming that makes this entire process point-and-click. No SSH, no command line, no hassle. Watch this repo for updates.
+> 🚀 **Uni Display Updater app now available!** A portable Windows and macOS app that makes this entire process point-and-click. Download it from the [Releases](https://github.com/Hackpig1974/unifi-connect-display-fix/releases/latest) page.
 
 ---
 
@@ -26,87 +26,76 @@ After SSH investigation of a UDM Pro — including the firmware directory, Postg
 
 ---
 
-## Two Methods
+## Option 1 — Uni Display Updater App (Easiest)
 
-| | Simple Method | SSH Method |
-|---|---|---|
-| **Requires SSH** | No | Yes |
-| **Technical level** | Beginner | Intermediate |
-| **Best for** | Most users | Advanced users / troubleshooting |
+Download the portable app from the [Releases](https://github.com/Hackpig1974/unifi-connect-display-fix/releases/latest) page.
+
+### What it does
+- Fetches all available Protect app versions directly from Ubiquiti's firmware API
+- Shows versions in a clean list with the latest clearly marked
+- One-click download with a progress bar
+- Saves files with friendly names like `protect-android-app-3.2.0-616.apk`
+- Opens your UniFi Connect WebUI automatically after download
+- Guides you through the exact upload steps
+
+### Setup
+1. Download `UniDisplayUpdater-portable.exe` (Windows) or `UniDisplayUpdater.dmg` (macOS)
+2. Run the app — no installation required
+3. Click ⚙ **Settings** and configure:
+   - **Console IP Address** — your UDM Pro IP (e.g. `192.168.1.1`)
+   - **Download Folder** — where APK files will be saved
+4. Click **↻ Refresh** to load available versions
+5. Select the latest version and click **⬇ Download Selected**
+6. After download, click **📤 Upload to UniFi Connect** — your browser opens to your console
+7. Follow the on-screen steps shown in the app
+
+### After the browser opens — what to do in UniFi Connect
+1. Log in if prompted
+2. Click on a **Display** in the device list to open its detail panel
+3. Click the **⚙ gear icon** in the right panel
+4. Verify **Display Mode is set to Android App**, then click **Manage Apps**
+5. Click the **upload icon** (box with arrow, top right of the dialog)
+6. Navigate to your download folder and select the APK file
+7. After upload, close Manage Apps and select the new version in the **App dropdown**
+8. The display will reboot and install the update ✅
 
 ---
 
-## ✅ Simple Method (No SSH Required)
-
-This is the quickest path for most users. No command line needed.
+## Option 2 — Simple Method (No App, No SSH)
 
 ### 1 — Find the Latest Version
 
-Open this URL in your browser to see all available Protect app versions from Ubiquiti's firmware API:
+Open this URL in your browser:
 
 ```
 https://fw-update.ubnt.com/api/firmware?filter=eq~~product~~protect-android-app&filter=eq~~platform~~android-app&filter=eq~~channel~~release&limit=20&sort=-created
 ```
 
-It returns JSON. Look for the first entry (the latest version) and find the `href` field inside `_links > data`. It will look like:
+Look for the first entry and find the `href` field inside `_links > data`. It will look like:
 
 ```
-https://fw-download.ubnt.com/data/protect-android-app/e3a3-android-app-3.2.0-616-18dd4fc8-1703-4134-ba69-625793d57077.apk
+https://fw-download.ubnt.com/data/protect-android-app/e3a3-android-app-3.2.0-616-...apk
 ```
 
 ### 2 — Download the APK
 
-Paste that URL directly into your browser address bar and download the file. It is a plain `.apk` file (130–200 MB).
+Paste that URL directly into your browser and download the file (130–200 MB).
 
-### 3 — Upload Through the WebUI
+### 3 — Upload and Install
 
-1. Open the UniFi Connect WebUI
-2. Click on any Display device
-3. Scroll to the **Manage** section
-4. Click **Manage Apps**
-5. Click the **upload icon** (top right of the dialog)
-6. Select the APK file you just downloaded
-7. Confirm the upload
-
-The console will parse and register it. It will appear in the App dropdown for your displays.
-
-> **Note:** You may need to refresh your browser before the new version appears.
-
-### 4 — Assign to Each Display
-
-1. Click on each display in the WebUI
-2. Under **Mode**, set Display Mode to **Android App**
-3. In the **App** dropdown, select the newly uploaded version
-4. The display will reboot and install the update
-5. Verify the version in the Protect app settings after reboot
-
-> **Note:** In my case the update applied to all displays simultaneously.
+Follow **steps 1–8** from the app instructions above (starting at "After the browser opens").
 
 ---
 
-## 🔧 SSH Method (Advanced)
+## Option 3 — SSH Method (Advanced)
 
-Use this method if the Simple Method doesn't work, or if you want to verify the file the console already downloaded rather than downloading again.
+Use this if you want to verify the file the console already downloaded or prefer the command line.
 
-### Prerequisites
+### Step 1 — Enable SSH
 
-- SSH access enabled on your console (login is `root`)
-- A computer with SCP capability (Windows 10/11 has this built in)
-
-### Step 1 — Enable SSH on Your Console
-
-1. Log into your UniFi OS console WebUI
-2. Go to **Settings → System → SSH**
-3. Enable SSH and **set a password** — note this password, you will need it
-4. Note your console's IP address
-
-Then connect:
-
-```bash
-ssh root@<your-console-ip>
-```
-
-When prompted, use the password you set in the SSH settings above.
+1. Go to **Settings → System → SSH** in your UniFi OS WebUI
+2. Enable SSH and set a password — note it, you will need it
+3. Connect: `ssh root@<your-console-ip>` — password is what you set above
 
 ### Step 2 — Check Available Versions
 
@@ -127,50 +116,41 @@ for f in data['_embedded']['firmware']:
 ls -la /volume1/.srv/unifi-connect/firmware/
 ```
 
-The console almost certainly already downloaded the latest version. Verify integrity:
+Verify integrity — compare MD5 against the value from the API:
 
 ```bash
 md5sum /volume1/.srv/unifi-connect/firmware/<filename>.apk
 ```
 
-Compare the MD5 against the value from the API in Step 2. If it matches, skip Step 4.
-
-### Step 4 — Download the APK (If Needed)
+### Step 4 — Download (If Needed)
 
 ```bash
 cd /volume1/.srv/unifi-connect/firmware/
-curl -O "<paste the full URL from Step 2 here>"
+curl -O "<paste the full URL from Step 2>"
 ```
 
 ### Step 5 — Copy to Your Computer
-
-From your **local machine** (not the SSH session):
 
 ```cmd
 scp root@<your-console-ip>:/volume1/.srv/unifi-connect/firmware/<filename>.apk C:\Users\<youruser>\Downloads\
 ```
 
-> **Tip:** Avoid destination paths with spaces.
+### Step 6 — Upload and Install
 
-### Steps 6 & 7 — Upload and Assign
-
-Follow **Steps 3 and 4** from the Simple Method above.
+Follow **steps 1–8** from the app instructions above (starting at "After the browser opens").
 
 ---
 
 ## Troubleshooting
 
 **Upload rejected with "Unsupported Format"**  
-Only plain `.apk` files are accepted. Do not use `.apkm` or `.apkx` bundle files. Files from Ubiquiti's firmware servers are plain APKs.
+Only plain `.apk` files are accepted. Do not use `.apkm` or `.apkx` bundles. Files from Ubiquiti's servers are plain APKs.
 
 **Display does not reboot after selecting the new version**  
-Try refreshing the WebUI and assigning again. You can also check logs via SSH:
-```bash
-tail -f /volume1/.srv/unifi-connect/log/apk.log
-```
+Refresh the WebUI and try again. Check logs via SSH: `tail -f /volume1/.srv/unifi-connect/log/apk.log`
 
 **MD5 does not match**  
-The file is corrupt. Delete it and re-download.
+File is corrupt — delete and re-download.
 
 **SSH connection refused**  
 Verify SSH is enabled in **UniFi OS → Settings → System → SSH**. Username is `root`, password is the one set in that same section.
