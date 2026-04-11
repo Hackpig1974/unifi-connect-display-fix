@@ -1,3 +1,8 @@
+# New online version available: https://unifi_fix.damon1974.com/
+# Thanks.
+
+---------------------------
+
 # UniFi Connect Display — Protect App Manual Update Fix
 
 > **Community workaround** — not affiliated with Ubiquiti.  
